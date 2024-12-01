@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Note from "../models/note.models";
+import createHttpError from "http-errors";
 
-const createNote=async (req:Request,res:Response)=>{
+const createNote=async (req:Request,res:Response,next:NextFunction)=>{
     try {
         const filename = req.file?.filename;
         const {title,subtitle,description}= req.body
@@ -24,9 +25,8 @@ const createNote=async (req:Request,res:Response)=>{
         }
     
     } catch (error) {
-        return res.status(500).json({
-            message:"error while creating notes....."
-        })
+        console.log(error)
+        return next(createHttpError(500,"error creating note.!"))
     }
 
 
@@ -35,4 +35,4 @@ const createNote=async (req:Request,res:Response)=>{
 
 
 
-export default createNote;
+export {createNote};
